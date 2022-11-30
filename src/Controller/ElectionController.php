@@ -24,9 +24,9 @@ class ElectionController extends AbstractController
     public function index(Request $request): Response
     {
         // Autorisation accordée uniquement aux appareils Android
-        $os = substr($request->headers->get('sec-ch-ua-platform'), 1, 7);
+        //$os = substr($request->headers->get('sec-ch-ua-platform'), 1, 7);
 
-        if ($os !== "Android") return $this->redirectToRoute('app_election_erreur');
+        //if ($os !== "Android") return $this->redirectToRoute('app_election_erreur');
 
         // Si le formulaire est soumis et contient un token
         $coupleRequest = $request->request->get('_couple');
