@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block meta %}{% endblock %}
+    <title>{% block title %}Backend :: {% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ absolute_url(asset('assets/css/app.css')) }}">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.dataTables.min.css">
+    {% endblock %}
+</head>
+<body class="backend">
+    <header>
+        <div class="container">
+            <nav class="navbar  sticky-to navbar-expand-lg">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{ path('app_dashboard') }}">SAFA</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav  justify-content-center me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_dashboard') }}">Statistiques</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_backend_famille_index') }}">Familles</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Paramètres
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ path('app_backend_commune_index') }}">Commune</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_backend_concours_index') }}">Concours</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_backend_anomalie') }}">Anomalie</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Présentiel
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Résultats</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_backend_scrutin_index') }}">Scrutin</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_backend_candidat_index') }}">Candidats</a></li>
+                                </ul>
+                            </li>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Administration
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ path('app_admin_user_index') }}">Utilisateur</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_backend_votant_list') }}">Votant</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                        <div class="profiles">
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user"></i> Profile
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ path('app_change_password') }}">Mot de passe</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    {% block body %}{% endblock %}
+
+    {% block javascripts %}
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#listeFamille').DataTable( {
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copyHtml5',
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5'
+                    ],
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/fr-FR.json'
+                    }
+                } );
+            } );
+        </script>
+    {% endblock %}
+</body>
+</html>

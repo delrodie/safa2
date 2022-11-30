@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %}
+    <main id="famille" class="mt-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for famille in familles %}
+                <div class="col" data-aos="zoom-in" data-aos-duration="2000" data-aos-easing="ease-in-sine">
+                    <div class="card h-100">
+                        <a href="{{ path('app_vote_show', {'slug': famille.slug}) }}">
+                            <figure>
+                                {% if famille.media %}
+                                    <img src="{{ absolute_url(asset('upload/famille/' ~ famille.media)) }}" class="card-img-top" alt="{{ famille.nom }}">
+                                {% else %}
+                                    <img src="{{ absolute_url(asset('assets/img/image.jpg')) }}" alt="card-img-top">
+                                {% endif %}
+                            </figure>
+
+                            <div class="card-body famille">
+                                <small class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ famille.commune_nom }}</small>
+                                <h5 class="card-title"><i class="fa-solid fa-users"></i> {{ famille.nom }}</h5>
+                                <p></p>
+                            </div>
+                        </a>
+
+                        <div class="card-footer">
+                            <small class="">
+                                <span class="numero">Code: <span>{{ famille.code }}</span> </span>
+                                <span class="vote"><i class="fa-solid fa-box-archive"></i> <span>{{ famille.vote }}</span>/{{ famille.vote_total }}</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <!-- A supprimer -->
+        <div class="row mt-5 mb-3">
+            <div class="col text-end">
+                <a href="{{ path('app_dashboard') }}">Connexion</a>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block meta %}
+    <link rel="canonical" href="{{ absolute_url(path('app_home')) }}" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:type" content="Item" />
+    <meta property="og:title" content="SAFA - Salon International de la Famille" />
+    <meta property="og:description" content="Salon International de la famille " />
+    <meta property="og:url" content="{{ absolute_url(path('app_home')) }}" />
+    <meta property="og:site_name" content="SAFA" />
+    <meta property="article:section" content="Item" />
+    <meta property="article:published_time" content="2022-11-19T15:25:59+00:00" />
+    <meta property="og:image" content="{{ absolute_url(asset('assets/img/bg.png')) }}" />
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:description" content="Salon International de la Famille"/>
+    <meta name="twitter:title" content="SAFA - Salon International de la Famille"/>
+    <meta name="twitter:domain" content="SAFA"/>
+    <meta name="twitter:image:src" content="{{ absolute_url(asset('assets/img/bg.png')) }}"/>
+{% endblock %}

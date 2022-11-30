@@ -1,0 +1,30 @@
+{% extends 'election_layout.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('app_election_index') }}" method="post" name="votePresentiel" id="votePresentiel">
+        <h2 id="labelVote"></h2>
+        <div class="card-group" id="cardGroup">
+            {% for data in datas %}
+                <div class="card">
+                    <img src="{{ absolute_url(asset('upload/famille/' ~ data.media)) }}" class="card-img-top" alt="..." id="image">
+                    <div class="card-body">
+                        <h5 class="card-title" id="nomCouple">{{ data.nom }}</h5>
+                    </div>
+                    <div class="card-footer d-grid gap-2" id="boutons">
+                        <input onclick="submit()" type="radio" class="btn-check" name="_couple" id="option{{ data.id }}" value="{{ data.id }}" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="option{{ data.id }}">Votez</label>
+                    </div>
+                </div>
+            {% endfor %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        </div>
+    </form>
+{% endblock %}
+
+{% block title %}Election en présentiel{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}
+

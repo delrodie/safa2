@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_backend_commune_delete', {'id': commune.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette commune?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commune.id) }}">
+    <button class="btn btn-danger">Supprimer</button>
+</form>

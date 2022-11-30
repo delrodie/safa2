@@ -1,0 +1,42 @@
+{% extends 'election_layout.html.twig' %}
+
+{% block body %}
+    <section id="electionMain">
+        <div class="main-box">
+            <div class="main-content">
+                <div class="main-text">
+                    <div class="alert alert-warning mt-5" role="alert">
+                        <h4 class="alert-heading text-center mb-3">FE-LI-CI-TA-TIONS !!!!!</h4>
+                        <p>
+                            Votre candidat { candidat nom } a été voté <strong>{ nombre }</strong> fois aujourd'hui dans la salle
+                        </p>
+                        <hr>
+                        <form action="{{ path('app_election_success') }}" method="post" id="formSuccess">
+                            <div class="card-footer d-grid gap-2" id="boutons">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <input onclick="submit()" type="radio" class="btn-check" name="_reinitialisation" id="success" value="100" autocomplete="off">
+                                <label class="btn btn-warning" for="success">Hôtesse</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+    </section>
+{% endblock %}
+
+{% block title %}Félicitations votre vote a été effectué avec succès{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) =>{
+            const formSuccess = document.getElementById('formSuccess');
+            formSuccess.addEventListener("submit", (event) =>{
+                event.preventDefault();
+            })
+        });
+    </script>
+{% endblock %}
+

@@ -1,0 +1,79 @@
+{% extends 'backend_layout.html.twig' %}
+
+{% block title %}{{ parent() }} Liste des anomalies{% endblock %}
+
+
+{% block body %}
+    <main id="formulaire">
+        <div class="container">
+            <h5 class="titre">Liste des anomalies</h5>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3 class="mb-5">Liste des anomalies</h3>
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <table id="listeVote" class="display mt-5">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Famille</th>
+                                    <th>Telephone</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function() {
+            // you may need to change this code if you are not using Bootstrap Datepicker
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "fr",
+                todayHighlight: true,
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#listeVote').DataTable({
+                "ajax": {
+                    url: '{{ absolute_url(path('app_ajax_anomalie')) }}',
+                    dataSrc: '',
+                },
+                columns: [
+                    { data: 'loop_index' },
+                    { data: 'famille' },
+                    { data: 'telephone' },
+                    { data: 'date' },
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/fr-FR.json'
+                }
+            });
+        });
+    </script>
+{% endblock %}

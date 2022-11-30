@@ -1,0 +1,68 @@
+{% extends 'backend_layout.html.twig' %}
+
+{% block title %}{{ parent() }} Gestion des familles{% endblock %}
+
+{% block body %}
+    <main id="formulaire">
+        <div class="container">
+            <h5 class="titre">Gestion des familles</h5>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Liste des familles</h3>
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <table id="listeFamille" class="display">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Code</th>
+                                <th>Date debut</th>
+                                <th>Date Fin</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for famille in familles %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('app_backend_familles_edit', {'id': famille.id}) }}">{{ famille.nom }}</a>
+                                    </td>
+                                    <td>{{ famille.code }}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Formulaire</h3>
+                        {{ include('backend_famille/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+{% endblock %}

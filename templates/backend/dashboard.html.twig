@@ -1,0 +1,100 @@
+{% extends 'backend_layout.html.twig' %}
+{% block title %}{{ parent() }} Tableau de bord{% endblock %}
+
+{% block body %}
+    <main>
+        <div class="container">
+            <section id="barre">
+                <div class="row">
+                    <div class="col-12 col-lg-9">
+                        <div>
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        {% for rang in rangs %}
+                            <div class="row classement">
+                                <div class="col-12 photo">
+                                    <figure>
+                                        <img src="{{ asset('upload/famille/' ~ rang.media) }}" alt="" class="img-fluid img-thumbnail">
+                                    </figure>
+                                    <div class="nom">{{ rang.nom }}</div>
+                                    <div class="rang">
+                                        {% if loop.first %}
+                                            {{ loop.index }} <sup>er</sup>
+                                        {% else %}
+                                            {{ loop.index }} <sup>e</sup>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </section>
+            <section id="liste">
+                <table id="listeFamille" class="display">
+                    <thead>
+                    <tr class="text-center">
+                        <th class="text-center">#</td>
+                        <th class="text-center">Commune</td>
+                        <th class="text-center">Famille</td>
+                        <th class="text-center">Vote</td>
+                        <th class="text-center">Pourcentage</td>
+                        <th class="text-center">Rang</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for rang in rangs %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ rang.commune }}</td>
+                            <td>{{ rang.nom }}</td>
+                            <td class="text-center">{{ rang.vote }}</td>
+                            <td class="text-center">{{ rang.pourcentage }}%</td>
+                            <td class="text-center">
+                                {% if loop.first %}
+                                    {{ loop.index }}<sup>er</sup>
+                                {% else %}
+                                    {{ loop.index }}<sup>e</sup>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for rang in rangs %}'{{ rang.nom }}',{% endfor %}
+                ],
+                datasets: [{
+                    label: ' Votes',
+                    data: [
+                        {% for rang in rangs %}{{ rang.vote }},{% endfor %}
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

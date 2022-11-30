@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Scrutin{% endblock %}
+
+{% block body %}
+    <h1>Create new Scrutin</h1>
+
+    {{ include('backend_scrutin/_form.html.twig') }}
+
+    <a href="{{ path('app_backend_scrutin_index') }}">back to list</a>
+{% endblock %}

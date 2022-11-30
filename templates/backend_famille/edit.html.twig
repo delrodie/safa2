@@ -1,0 +1,95 @@
+{% extends 'backend_layout.html.twig' %}
+
+{% block title %}{{ parent() }} Gestion des familles{% endblock %}
+
+{% block body %}
+    <main id="formulaire">
+        <div class="container">
+            <h5 class="titre">Gestion des familles</h5>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Liste des familles</h3>
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <table id="listeFamille" class="display">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Concours</th>
+                                <th>Commune</th>
+                                <th>Famille</th>
+                                <th>Code</th>
+                                <th>Voix</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for famille in familles %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ famille.concours.nom }}</td>
+                                    <td>{{ famille.commune.nom }}</td>
+                                    <td>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#famille{{ famille.id }}">{{ famille.nom }}</a>
+                                        <div class="modal fade" id="famille{{ famille.id }}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">{{ famille.code}} - {{ famille.nom }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {% if famille.media %}
+                                                            <img src="{{ absolute_url(asset('upload/famille/' ~ famille.media)) }}" alt="{{ famille.nom }}" class="img-fluid img-thumbnail">
+                                                        {% else %}
+                                                            <img src="{{ absolute_url(asset('assets/img/image.jpg')) }}" alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                                        <a href="{{ path('app_backend_famille_edit', {'id': famille.id}) }}" class="btn btn-primary">Modifier</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ famille.code }}</td>
+                                    <td> </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Formulaire</h3>
+                        {{ include('backend_famille/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+                        {{ include('backend_famille/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+{% endblock %}

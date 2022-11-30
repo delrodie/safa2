@@ -1,0 +1,51 @@
+{% extends 'backend_layout.html.twig' %}
+
+{% block title %}{{ parent() }} Gestion des users{% endblock %}
+
+{% block body %}
+    <main id="formulaire">
+        <div class="container">
+            <h5 class="titre">Gestion des users</h5>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Liste des users</h3>
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <table id="listeFamille" class="display">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Famille</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}">{{ user.email }}</a>
+                                    </td>
+                                    <td>#</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Formulaire</h3>
+                        {% include('admin_user/_form.html.twig') %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

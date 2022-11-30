@@ -1,0 +1,52 @@
+{% extends 'backend_layout.html.twig' %}
+
+{% block title %}{{ parent() }} Gestion des communes{% endblock %}
+
+{% block body %}
+    <main id="formulaire">
+        <div class="container">
+            <h5 class="titre">Gestion des communes</h5>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Liste des communes</h3>
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        <table id="listeFamille" class="display">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Famille</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for commune in communes %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('app_backend_commune_edit', {'id': commune.id}) }}">{{ commune.nom }}</a>
+                                    </td>
+                                    <td>#</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Formulaire</h3>
+                        {{ include('backend_commune/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+                        {{ include('backend_commune/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

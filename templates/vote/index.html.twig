@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ famille.nom }}{% endblock %}
+
+{% block body %}
+    <main id="inscription">
+        <div class="row mt-5">
+            <div class="col-10 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+                <div class="alert alert-info alert-dismissible fade show mb-5" role="alert">
+                    <strong>Attention!</strong> Il faudrait obligatoirement renseigner votre numéro de téléphone pour pouvoir voter.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <form method="post" action="{{ path('app_vote') }}" id="telephoneForm">
+                    <h1 class="text-center">Inscription</h1>
+                    <div class="mb-3">
+                        <label for="inputTelephone" class="form-label">Téléphone</label>
+                        <!--<input type="tel" name="_telephone" class="form-control" id="inputTelephone" placeholder="Votre numero de telephone" required minlength="10" maxlength="10">-->
+                        <input type="tel" name="_telephone" class="form-control" id="inputTelephone" placeholder="Votre numero de telephone" required minlength="10" maxlength="10" pattern="[0-9]{10}">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button class="btn btn-primary" type="submit">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const phone = document.getElementById('inputTelephone').value;
+        const form = document.getElementById('telephoneForm');
+
+        form.addEventListener('submit', () =>{
+            e.preventDefault();
+            phone.display='';
+        })
+        function phonevalide(){
+            var regex = new RegExp(/^(01|05|07)[0-9]{8}/gi);
+            console.log(phone);
+
+            if (regex.test(phone)) console.log('bravo');
+            else console.log('attention');
+        }
+    </script>
+{% endblock %}

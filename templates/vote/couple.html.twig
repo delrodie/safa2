@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ famille.concours.nom }}: {{ famille.nom }}{% endblock %}
+
+{% block body %}
+    <main id="vote">
+        <div class="row mt-5">
+            <div class="col-12 col-md-8">
+                <div class="row">
+                    <div class="col-12">
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <figure>
+                            {% if famille.media %}
+                                <img src="{{ absolute_url(asset('upload/famille/' ~ famille.media)) }}" class="card-img-top" alt="{{ famille.nom }}">
+                            {% else %}
+                                <img src="{{ absolute_url(asset('assets/img/image.jpg')) }}" alt="card-img-top">
+                            {% endif %}
+                        </figure>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <h3>{{ famille.nom }}</h3>
+                        <h5>Candidate N°: <span>{{ famille.code }}</span></h5>
+                        <small class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ famille.commune.nom }}</small>
+                        <p class="position">Nombre de voix: <span>{{ famille.votes|length    }}</span></p>
+                        <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+                            <strong>Attention!</strong> Il faudrait <strong>LIKER la page facebook</strong>, après votre vote pour qu'il soit pris en compte.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <form class="mt-5" method="post">
+                            <div class="d-grid gap-2">
+                                <input type="hidden" name="_couple" value="{{ famille.slug }}">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                {% if affichage_bouton %}
+                                    <button class="btn btn-primary btn-lg" type="submit"><i class="fa-solid fa-heart"></i> Je vote</button>
+                                {% else %}
+                                    <a href="{{ path('app_home') }}" class="btn btn-outline-danger btn-lg" disabled><i class="fa fa-reply"></i> Retour à la liste. </a>
+                                {% endif %}
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 classement">
+                <div class="row">
+                    <div class="col-12"><h2>Classement</h2></div>
+                    {% for rang in rangs %}
+                        <div class="col-12 famille">
+                            <div class="row">
+                                <div class="col-3">
+                                    <figure>
+                                        {% if rang.media %}
+                                            <img src="{{ absolute_url(asset('upload/famille/' ~ rang.media)) }}" class="img-fluid" alt="">
+                                        {% else %}
+                                            <img src="{{ absolute_url(asset('assets/img/image.jpg')) }}" alt="" class="img-fluid">
+                                        {% endif %}
+                                    </figure>
+                                </div>
+                                <div class="col-9">
+                                    <h4> <span style="color: blue">
+                                        {% if loop.first %}
+                                            {{ loop.index }}<sup>er</sup>
+                                        {% else %}
+                                            {{ loop.index }}<sup>e</sup>
+                                        {% endif %}</span> - &nbsp;
+                                        {{ rang.nom }}
+                                    </h4>
+                                    <div class="vote">Voix: <span class="point">{{ rang.vote }}</span> (<span class="pourcentage">{{ rang.pourcentage }}%</span>) </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block meta %}
+    <link rel="canonical" href="{{ absolute_url(path('app_vote_show',{'slug': famille.slug})) }}" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:type" content="Item" />
+    <meta property="og:title" content="Votez le {{ famille.nom}} " />
+    <meta property="og:description" content="Salon International de la famille " />
+    <meta property="og:url" content="{{ absolute_url(path('app_home')) }}" />
+    <meta property="og:site_name" content="SAFA" />
+    <meta property="article:section" content="Item" />
+    <meta property="article:published_time" content="2022-11-19T15:25:59+00:00" />
+    <meta property="og:image" content="{{ absolute_url(asset('upload/famille/' ~ famille.media)) }}" />
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:description" content="Salon International de la Famille"/>
+    <meta name="twitter:title" content="Votez le {{ famille.nom}}"/>
+    <meta name="twitter:domain" content="SAFA"/>
+    <meta name="twitter:image:src" content="{{ absolute_url(asset('upload/famille/' ~ famille.media)) }}"/>
+{% endblock %}

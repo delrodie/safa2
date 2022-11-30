@@ -1,0 +1,23 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">{{ vote.concours.nom }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col">{{ vote.famille.nom }}</div>
+                <div class="col">{{ vote.telephone }}</div>
+                <div class="col">{{ vote.createdAt|date('Y-m-d H:i:s') }}</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="{{ path('app_backend_vote_delete', {'id': vote.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce vote?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vote.id) }}">
+                <button class="btn btn-danger">Supprimer</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,143 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css");
+:root {
+  --couleur-principale: rgb(255, 136, 0);
+  --couleur-secondaire: rgb(40, 131, 4);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header nav.navbar {
+  background: #fff;
+}
+
+header nav a span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+main a {
+  text-decoration: none;
+  color: var(--couleur-principale);
+}
+
+main a:hover {
+  color: var(--couleur-secondaire);
+}
+
+main .card .card-body {
+  padding: 0 10px;
+}
+
+main .card .card-footer span.numero {
+  float: left;
+}
+
+main .card .card-footer span.numero span {
+  font-weight: bold;
+  color: var(--couleur-secondaire);
+}
+
+main .card .card-footer span.vote {
+  float: right;
+}
+
+main .card .card-footer span.vote span {
+  font-weight: bold;
+  color: var(--couleur-principale);
+}
+
+main figure {
+  overflow: hidden;
+}
+
+main figure img:hover {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+main#inscription h1 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.7rem;
+  margin-bottom: 25px;
+}
+
+main#inscription label {
+  font-weight: bold;
+  color: #636262;
+}
+
+main#vote h3 {
+  color: var(--couleur-secondaire);
+}
+
+main#vote h5 {
+  margin: 15px auto;
+}
+
+main#vote h5 span {
+  font-weight: bold;
+  color: var(--couleur-principale);
+}
+
+main#vote p {
+  margin: 25px auto;
+}
+
+main#vote p span {
+  font-weight: bold;
+  color: red;
+  font-size: 1.2rem;
+}
+
+main#vote .classement {
+  padding-left: 30px;
+}
+
+main#vote .classement h2 {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #616060;
+}
+
+main#vote .classement .famille {
+  cursor: pointer;
+  border-bottom: 1px solid #e0dddd;
+  padding-top: 10px;
+}
+
+main#vote .classement .famille:hover {
+  background: #e4e3e3;
+}
+
+main#vote .classement .famille h4 {
+  font-size: 1.3rem;
+}
+
+main#vote .classement .famille .vote span {
+  font-weight: bold;
+}
+
+main#vote .classement .famille .vote span.pourcentage {
+  color: var(--couleur-principale);
+}
+
+@media screen and (max-width: 425px) {
+  header form.recherche {
+    margin-top: 15px;
+    width: 100%;
+  }
+  main .classement {
+    margin-top: 50px;
+  }
+}
+/*# sourceMappingURL=app.css.map */
