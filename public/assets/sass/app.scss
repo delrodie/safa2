@@ -34,6 +34,15 @@ header{
                 }
             }
         }
+        span.nombre{
+            float: right;
+            font-weight: bold;
+            font-size: 1.5rem;
+            span{
+                font-size: 2.7rem;
+                color: darkblue;
+            }
+        }
     }
 }
 main{
@@ -301,6 +310,12 @@ main{
     .main-text {
         max-width: 80%;
     }
+}
+
+.resultats{
+    text-align: center;
+    font-weight: bold;
+    font-size: 4.5rem;
 }
 
 @media screen and (max-width: 425px) {

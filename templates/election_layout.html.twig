@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}SAFA Tour -Salon International de la Famille{% endblock %}</title>
-
+        {% block meta %}{% endblock %}
         <meta name="keywords" content="SAFA, salon, famille, couple"  />
         <meta name="description" content="Salon International de la Famille" />
         <meta name="revisit" content="7 days" />
@@ -16,8 +16,6 @@
         <meta name="distribution" content="global" />
         <meta name="Audience" content="All" />
         <meta name="Robots" content="full">
-
-        {% block meta %}{% endblock %}
 
         <link rel="icon" href="">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
@@ -30,12 +28,12 @@
         <div class="container-fluid">
         <header>
             <nav class="navbar">
-                <div class="container" data-aos="flip-left" data-aos-easing="ease-out-cubic" data-aos-duration="2000">
+                <div class="container" >
                     <a class="navbar-brand" href="{{ absolute_url(path('app_home')) }}">
                         <!--<img src="" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">-->
                         <span class="h1">SAFA TOUR 2022</span>
                     </a>
-
+                    <span class="nombre"> {% block nombre %}{% endblock %}</span>
                 </div>
             </nav>
         </header>

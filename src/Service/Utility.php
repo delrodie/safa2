@@ -362,6 +362,7 @@ class Utility
                 'media' => $candidat->getMedia(),
                 'commune' => $candidat->getCommune()->getNom(),
                 'scrutin' => $candidat->getScrutin()->getNom(),
+                'voix' => count($candidat->getElections())
             ];
         } //dd($list);
 
@@ -386,5 +387,46 @@ class Utility
         $this->electionRepository->save($election, true);
 
         return $candidat;
+    }
+
+    public function resultatElection()
+    {
+        // Recherche du nombre de voix par candidat
+        $candidats = $this->candidatRepository->findByScrutin();
+        $lists=[]; $totalVote=0;
+        foreach ($candidats as $candidat){
+            $lists[$candidat->getId()] = count($candidat->getElections());
+            $totalVote = count($candidat->getScrutin()->getElections());
+        }
+
+        // Tri decroissant du tableau de vote et classement des candidats
+        arsort($lists);
+        $rangs=[]; $i=0;
+        foreach ($lists as $key => $value){
+            $famille = $this->candidatRepository->findOneBy(['id' => (int) $key]);
+            $voix = count($famille->getElections());
+            $rangs[$i++]=[
+                'id' => $famille->getId(),
+                'nom' => $famille->getNom(),
+                'slug' => $famille->getSlug(),
+                'media' => $famille->getMedia(),
+                'scrutin' => $famille->getScrutin()->getNom(),
+                'commune' => $famille->getCommune()->getNom(),
+                'voix' => $voix
+            ];
+        }
+
+        return $rangs;
+    }
+
+    public function nombreVotantElection()
+    {
+        $scrutins = $this->scrutinRepository->findByDate();
+        $total=0;
+        foreach ($scrutins as $scrutin){
+            $total = count($scrutin->getElections());
+        }
+
+        return (int) $total;
     }
 }

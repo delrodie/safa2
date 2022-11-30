@@ -23,8 +23,11 @@ class ElectionController extends AbstractController
     #[Route('/', name: 'app_election_index', methods: ['GET','POST'])]
     public function index(Request $request): Response
     {
-        // Affection de la valeur false au bouton clear
-        $btnClear = false;
+        // Autorisation accordée uniquement aux appareils Android
+        $os = substr($request->headers->get('sec-ch-ua-platform'), 1, 7);
+
+        if ($os !== "Android") return $this->redirectToRoute('app_election_erreur');
+
         // Si le formulaire est soumis et contient un token
         $coupleRequest = $request->request->get('_couple');
         if ($request->getMethod() === 'POST' && $coupleRequest && $request->request->get('_csrf_token')) {
@@ -55,7 +58,6 @@ class ElectionController extends AbstractController
 
         return $this->render('home/election.html.twig',[
             'datas' => $this->utility->scrutinEnCours(),
-            'btnClear' => $btnClear
         ]);
     }
 
@@ -71,5 +73,11 @@ class ElectionController extends AbstractController
         return $this->render('home/election_success.html.twig',[
             //'couple_vote' => resultat de la réquete
         ]);
+    }
+
+    #[Route('/erreur/appareil', name:'app_election_erreur')]
+    public function erreur(): Response
+    {
+        return $this->render('home/election_erreur.html.twig');
     }
 }

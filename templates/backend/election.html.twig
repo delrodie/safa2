@@ -1,0 +1,25 @@
+{% extends 'election_layout.html.twig' %}
+
+{% block body %}
+    <div class="card-group" id="cardGroup">
+        {% for data in datas %}
+            <div class="card">
+                <img src="{{ absolute_url(asset('upload/candidat/' ~ data.media)) }}" class="card-img-top" alt="..." id="image">
+                <div class="card-body">
+                    <h5 class="card-title" id="nomCouple">{{ data.nom }}</h5>
+                    <div class=""><span class="badge bg-primary">{{ data.commune }}</span></div>
+                </div>
+                <div class="card-footer d-grid gap-2" id="boutons">
+                    <div class="resultats">{{ data.voix }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block title %}Resultats{% endblock %}
+{% block nombre %}Votants: <span>{{ totalVotant }}</span>{% endblock %}
+
+{% block meta %}
+    <meta http-equiv="refresh" content="5">
+{% endblock %}
