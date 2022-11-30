@@ -3,11 +3,15 @@
 namespace App\Service;
 
 use App\Entity\Anomalie;
+use App\Entity\Election;
 use App\Entity\Votant;
 use App\Entity\Vote;
 use App\Repository\AnomalieRepository;
+use App\Repository\CandidatRepository;
 use App\Repository\ConcoursRepository;
+use App\Repository\ElectionRepository;
 use App\Repository\FamilleRepository;
+use App\Repository\ScrutinRepository;
 use App\Repository\VotantRepository;
 use App\Repository\VoteRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,9 +27,14 @@ class Utility
     private RequestStack $requestStack;
     private VotantRepository $votantRepository;
     private AnomalieRepository $anomalieRepository;
+    private ScrutinRepository $scrutinRepository;
+    private CandidatRepository $candidatRepository;
+    private ElectionRepository $electionRepository;
 
     public function __construct(ConcoursRepository $concoursRepository, FamilleRepository $familleRepository, VoteRepository $voteRepository,
-                                UrlGeneratorInterface $urlGenerator, RequestStack $requestStack, VotantRepository $votantRepository, AnomalieRepository $anomalieRepository,
+                                UrlGeneratorInterface $urlGenerator, RequestStack $requestStack, VotantRepository $votantRepository,
+                                AnomalieRepository $anomalieRepository, ScrutinRepository $scrutinRepository, CandidatRepository $candidatRepository,
+                                ElectionRepository $electionRepository
     )
     {
         $this->concoursRepository = $concoursRepository;
@@ -35,6 +44,9 @@ class Utility
         $this->requestStack = $requestStack;
         $this->votantRepository = $votantRepository;
         $this->anomalieRepository = $anomalieRepository;
+        $this->scrutinRepository = $scrutinRepository;
+        $this->candidatRepository = $candidatRepository;
+        $this->electionRepository = $electionRepository;
     }
 
     /**
@@ -331,5 +343,48 @@ class Utility
 
         //$this->requestStack->getParentRequest()->fla
         return $list;
+    }
+
+    /**
+     * Liste des candidats selon le scrutin en cours
+     *
+     * @return array
+     */
+    public function scrutinEnCours(): array
+    {
+        $candidats =  $this->candidatRepository->findByScrutin();
+        $list=[]; $i=0;
+        foreach ($candidats as $candidat){
+            $list[$i++]=[
+                'id' => $candidat->getId(),
+                'nom' => $candidat->getNom(),
+                'slug' => $candidat->getSlug(),
+                'media' => $candidat->getMedia(),
+                'commune' => $candidat->getCommune()->getNom(),
+                'scrutin' => $candidat->getScrutin()->getNom(),
+            ];
+        } //dd($list);
+
+        return $list;
+    }
+
+    public function election($coupleId, $operation)
+    {
+        // Verification dans la base de données de non-existence de la session
+        if ($this->electionRepository->findOneBy(['operation'=>$operation]))
+            return false;
+
+        $candidat = $this->candidatRepository->findOneBy(['id' => $coupleId]);
+        //$scrutin = $this->scrutinRepository->findOneBy(['id' => $candidat->getScrutin()->getId()]);
+
+        // On instancie l'entité election
+        $election = new Election();
+        $election->setOperation($operation);
+        $election->setCandidat($candidat);
+        $election->setScrutin($candidat->getScrutin());
+
+        $this->electionRepository->save($election, true);
+
+        return $candidat;
     }
 }

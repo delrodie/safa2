@@ -39,6 +39,23 @@ class CandidatRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByScrutin()
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('s')
+            ->addSelect('m')
+            ->leftJoin('c.scrutin', 's')
+            ->leftJoin('c.commune', 'm')
+            ->where('s.date = :date')
+            ->andWhere('s.statut = :statut')
+            ->setParameters([
+                'date' => date('Y-m-d'),
+                'statut' => true
+            ])
+            ->getQuery()->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Candidat[] Returns an array of Candidat objects
 //     */

@@ -39,6 +39,15 @@ class ScrutinRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByDate()
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.date = :date')
+            ->setParameter('date', date('Y-m-d'))
+            ->getQuery()->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Scrutin[] Returns an array of Scrutin objects
 //     */

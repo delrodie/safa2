@@ -5,20 +5,22 @@
         <div class="main-box">
             <div class="main-content">
                 <div class="main-text">
-                    <div class="alert alert-warning mt-5" role="alert">
-                        <h4 class="alert-heading text-center mb-3">FE-LI-CI-TA-TIONS !!!!!</h4>
-                        <p>
-                            Votre candidat { candidat nom } a été voté <strong>{ nombre }</strong> fois aujourd'hui dans la salle
-                        </p>
-                        <hr>
-                        <form action="{{ path('app_election_success') }}" method="post" id="formSuccess">
-                            <div class="card-footer d-grid gap-2" id="boutons">
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                <input onclick="submit()" type="radio" class="btn-check" name="_reinitialisation" id="success" value="100" autocomplete="off">
-                                <label class="btn btn-warning" for="success">Hôtesse</label>
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }} mt-5" role="alert">
+                                <h4 class="alert-heading text-center mb-3">FE-LI-CI-TA-TIONS !!!!!</h4>
+                                <p>{{ message }}</p>
+                                <hr>
+                                <form action="{{ path('app_election_success') }}" method="post" id="formSuccess">
+                                    <div class="card-footer d-grid gap-2" id="boutons">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                        <input onclick="submit()" type="radio" class="btn-check" name="_reinitialisation" id="success" value="100" autocomplete="off">
+                                        <label class="btn btn-warning" for="success">Hôtesse</label>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

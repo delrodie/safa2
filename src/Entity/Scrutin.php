@@ -31,9 +31,13 @@ class Scrutin
     #[ORM\OneToMany(mappedBy: 'scrutin', targetEntity: Candidat::class)]
     private Collection $candidats;
 
+    #[ORM\OneToMany(mappedBy: 'scrutin', targetEntity: Election::class)]
+    private Collection $elections;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
+        $this->elections = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +117,36 @@ class Scrutin
             // set the owning side to null (unless already changed)
             if ($candidat->getScrutin() === $this) {
                 $candidat->setScrutin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Election>
+     */
+    public function getElections(): Collection
+    {
+        return $this->elections;
+    }
+
+    public function addElection(Election $election): self
+    {
+        if (!$this->elections->contains($election)) {
+            $this->elections->add($election);
+            $election->setScrutin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElection(Election $election): self
+    {
+        if ($this->elections->removeElement($election)) {
+            // set the owning side to null (unless already changed)
+            if ($election->getScrutin() === $this) {
+                $election->setScrutin(null);
             }
         }
 
