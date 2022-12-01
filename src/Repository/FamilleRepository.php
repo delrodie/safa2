@@ -59,6 +59,23 @@ class FamilleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Liste des familles concercnées par le concours encours
+     * @return float|int|mixed|string
+     */
+    public function findByDernierConcours(): mixed
+    {
+        return $this->createQueryBuilder('f')
+            ->addSelect('cu')
+            ->addSelect('co')
+            ->leftJoin('f.commune', 'co')
+            ->leftJoin('f.concours', 'cu')
+            ->orderBy('cu.fin', "DESC")
+            ->setMaxResults(1)
+            ->getQuery()->getResult()
+            ;
+    }
+
+    /**
      * @throws NonUniqueResultException
      */
     public function findOne($id)

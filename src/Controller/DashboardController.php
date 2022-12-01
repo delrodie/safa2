@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\Utility;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 #[Route('/dashboard')]
 class DashboardController extends AbstractController
@@ -17,10 +18,13 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/', name: 'app_dashboard')]
-    public function index()
+    public function index(): Response
     {
+        $rangs = $this->utility->classement(); //dd($rangs);
+        if (!$rangs) $rangs = $this->utility->classementDernierConcours();
+
         return $this->render('backend/dashboard.html.twig',[
-            'rangs' => $this->utility->classement()
+            'rangs' => $rangs
         ]);
     }
 }

@@ -194,6 +194,39 @@ class Utility
     }
 
     /**
+     * Classement du dernier concours eut lieu
+     *
+     * @return array
+     */
+    public function classementDernierConcours(): array
+    {
+        $familles = $this->familleRepository->findByDernierConcours();
+        $lists=[]; $i=0; $totalVote=1;
+        foreach ($familles as $famille){
+            $lists[$famille->getId()]=count($famille->getVotes());
+            $totalVote = count($famille->getConcours()->getVotes());
+        }
+        arsort($lists); //dd($lists[0]);
+        $rang=[]; $j=0;
+        if (!$totalVote) $totalVote=1;
+        foreach ($lists as $key => $value){
+            $couple = $this->familleRepository->findOneBy(['id'=> (int)$key]);
+            $vote = count($couple->getVotes());
+            $rang[$j++]=[
+                'id' => $couple->getId(),
+                'nom' => $couple->getNom(),
+                'media' => $couple->getMedia(),
+                'vote' => $vote,
+                'pourcentage' => round($vote * 100 / $totalVote, 2),
+                'commune' => $couple->getCommune()->getNom()
+            ];
+
+        }
+
+        return $rang;
+    }
+
+    /**
      * Liste des votes concernants un conours
      *
      * @param $concours
