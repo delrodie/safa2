@@ -70,7 +70,7 @@ class FamilleRepository extends ServiceEntityRepository
             ->leftJoin('f.commune', 'co')
             ->leftJoin('f.concours', 'cu')
             ->orderBy('cu.fin', "DESC")
-            ->setMaxResults(1)
+            //->setMaxResults(1)
             ->getQuery()->getResult()
             ;
     }
