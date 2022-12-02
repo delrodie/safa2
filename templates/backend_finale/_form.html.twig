@@ -1,0 +1,16 @@
+{{ form_start(form) }}
+<div class="row form-group">
+    <div class="col-12 mt-3">{{ form_row(form.nom) }}</div>
+    <div class="col-12 mt-3">{{ form_row(form.debut) }}</div>
+    <div class="col-12 mt-3">{{ form_row(form.fin) }}</div>
+    <div class="col-12 form-check mt-3 ml-3">
+        {{ form_widget(form.statut) }}
+        {{ form_label(form.statut) }}
+    </div>
+</div>
+    {{ form_widget(form) }}
+<div class="text-end mt-5">
+    <a href="{{ path('app_backend_finale_index') }}" class="btn btn-outline-secondary">Annuler</a>
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+</div>
+{{ form_end(form) }}

@@ -486,4 +486,17 @@ class Utility
 
         return true;
     }
+
+    public function finaleDate($finale)
+    {
+        //dd($finale);
+        $debut = $finale->getDebut();
+        $fin = $finale->getFin();
+
+        $finale->setDebut($debut);
+        $finale->setFin($fin);
+        $finale->setSlug($finale->getNom());
+
+        return $finale;
+    }
 }

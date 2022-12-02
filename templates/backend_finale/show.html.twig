@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Finale{% endblock %}
+
+{% block body %}
+    <h1>Finale</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ finale.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ finale.nom }}</td>
+            </tr>
+            <tr>
+                <th>Debut</th>
+                <td>{{ finale.debut ? finale.debut|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fin</th>
+                <td>{{ finale.fin ? finale.fin|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ finale.slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backend_finale_index') }}">back to list</a>
+
+    <a href="{{ path('app_backend_finale_edit', {'id': finale.id}) }}">edit</a>
+
+    {{ include('backend_finale/_delete_form.html.twig') }}
+{% endblock %}
