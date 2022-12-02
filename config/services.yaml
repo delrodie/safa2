@@ -27,3 +27,4 @@ services:
         arguments:
             $familleDirectory: '%kernel.project_dir%/public/upload/famille'
             $candidatDirectory: '%kernel.project_dir%/public/upload/candidat'
+            $finalisteDirectory: '%kernel.project_dir%/public/upload/finaliste'

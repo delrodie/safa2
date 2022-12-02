@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FinaleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +30,14 @@ class Finale
 
     #[ORM\Column(nullable: true)]
     private ?bool $statut = null;
+
+    #[ORM\OneToMany(mappedBy: 'finale', targetEntity: Fainaliste::class)]
+    private Collection $fainalistes;
+
+    public function __construct()
+    {
+        $this->fainalistes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -92,5 +102,40 @@ class Finale
         $this->statut = $statut;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Fainaliste>
+     */
+    public function getFainalistes(): Collection
+    {
+        return $this->fainalistes;
+    }
+
+    public function addFainaliste(Fainaliste $fainaliste): self
+    {
+        if (!$this->fainalistes->contains($fainaliste)) {
+            $this->fainalistes->add($fainaliste);
+            $fainaliste->setFinale($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFainaliste(Fainaliste $fainaliste): self
+    {
+        if ($this->fainalistes->removeElement($fainaliste)) {
+            // set the owning side to null (unless already changed)
+            if ($fainaliste->getFinale() === $this) {
+                $fainaliste->setFinale(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nom;
     }
 }

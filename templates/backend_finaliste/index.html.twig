@@ -1,0 +1,89 @@
+{% extends 'backend_layout.html.twig' %}
+
+{% block title %}{{ parent() }} Gestion des fainalistes{% endblock %}
+
+{% block body %}
+    <main id="formulaire">
+        <div class="container">
+            <h5 class="titre">Gestion des fainalistes</h5>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Liste des fainalistes</h3>
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <table id="listeFamille" class="display">
+                            <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Commune</th>
+                                <th class="text-center">Finaliste</th>
+                                <th class="text-center">Scrutins</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fainaliste in fainalistes %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ fainaliste.commune.nom }}</td>
+                                    <td>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#finaliste{{ fainaliste.id }}">{{ fainaliste.nom }}</a>
+                                        <div class="modal fade" id="finaliste{{ fainaliste.id }}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"> {{ fainaliste.nom }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {% if fainaliste.media %}
+                                                            <img src="{{ absolute_url(asset('upload/finaliste/' ~ fainaliste.media)) }}" alt="{{ fainaliste.nom }}" class="img-fluid img-thumbnail">
+                                                        {% else %}
+                                                            <img src="{{ absolute_url(asset('assets/img/image.jpg')) }}" alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                                        <a href="{{ path('app_backend_finaliste_edit', {'id': fainaliste.id}) }}" class="btn btn-primary">Modifier</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ fainaliste.finale.nom }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shadow-sm p-3 mb-5 bg-body rounded">
+                        <h3>Formulaire</h3>
+                        {{ include('backend_finaliste/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+{% endblock %}

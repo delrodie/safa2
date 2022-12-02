@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Fainaliste{% endblock %}
+
+{% block body %}
+    <h1>Edit Fainaliste</h1>
+
+    {{ include('backend_finaliste/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_backend_finaliste_index') }}">back to list</a>
+
+    {{ include('backend_finaliste/_delete_form.html.twig') }}
+{% endblock %}
