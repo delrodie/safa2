@@ -14,6 +14,8 @@ use App\Repository\FamilleRepository;
 use App\Repository\ScrutinRepository;
 use App\Repository\VotantRepository;
 use App\Repository\VoteRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -30,11 +32,12 @@ class Utility
     private ScrutinRepository $scrutinRepository;
     private CandidatRepository $candidatRepository;
     private ElectionRepository $electionRepository;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(ConcoursRepository $concoursRepository, FamilleRepository $familleRepository, VoteRepository $voteRepository,
                                 UrlGeneratorInterface $urlGenerator, RequestStack $requestStack, VotantRepository $votantRepository,
                                 AnomalieRepository $anomalieRepository, ScrutinRepository $scrutinRepository, CandidatRepository $candidatRepository,
-                                ElectionRepository $electionRepository
+                                ElectionRepository $electionRepository, EntityManagerInterface $entityManager
     )
     {
         $this->concoursRepository = $concoursRepository;
@@ -47,6 +50,7 @@ class Utility
         $this->scrutinRepository = $scrutinRepository;
         $this->candidatRepository = $candidatRepository;
         $this->electionRepository = $electionRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -405,8 +409,8 @@ class Utility
     public function election($coupleId, $operation)
     {
         // Verification dans la base de données de non-existence de la session
-        if ($this->electionRepository->findOneBy(['operation'=>$operation]))
-            return false;
+        //if ($this->electionRepository->findOneBy(['operation'=>$operation]))
+        //    return false;
 
         $candidat = $this->candidatRepository->findOneBy(['id' => $coupleId]);
         //$scrutin = $this->scrutinRepository->findOneBy(['id' => $candidat->getScrutin()->getId()]);
@@ -452,7 +456,12 @@ class Utility
         return $rangs;
     }
 
-    public function nombreVotantElection()
+    /**
+     * Nombre total de votants
+     *
+     * @return int
+     */
+    public function nombreVotantElection(): int
     {
         $scrutins = $this->scrutinRepository->findByDate();
         $total=0;
@@ -461,5 +470,20 @@ class Utility
         }
 
         return (int) $total;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function videElection()
+    {
+        $connexion = $this->entityManager->getConnection();
+        $platform = $connexion->getDatabasePlatform();
+
+        $result = $connexion->executeQuery($platform->getTruncateTableSQL('election', true));
+
+        if (!$result) return false;
+
+        return true;
     }
 }

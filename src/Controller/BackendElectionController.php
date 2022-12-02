@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Utility;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,5 +26,16 @@ class BackendElectionController extends AbstractController
             'datas' => $this->utility->resultatElection(),
             'totalVotant' => $this->utility->nombreVotantElection()
         ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/', name: 'app_backend_election_trucate')]
+    public function table()
+    {
+        $this->utility->videElection();
+
+        return $this->render("backend/dashboard.html.twig");
     }
 }
