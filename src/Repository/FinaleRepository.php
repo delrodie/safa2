@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Finale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +38,18 @@ class FinaleRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findFinaleEncours()
+    {
+        return $this->createQueryBuilder('f')
+            ->where(':date BETWEEN f.debut AND f.fin')
+            ->setParameter('date', date('Y-m-d'))
+            ->getQuery()->getOneOrNullResult()
+            ;
     }
 
 //    /**

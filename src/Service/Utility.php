@@ -6,16 +6,21 @@ use App\Entity\Anomalie;
 use App\Entity\Election;
 use App\Entity\Votant;
 use App\Entity\Vote;
+use App\Entity\VoteFinale;
 use App\Repository\AnomalieRepository;
 use App\Repository\CandidatRepository;
 use App\Repository\ConcoursRepository;
 use App\Repository\ElectionRepository;
+use App\Repository\FainalisteRepository;
 use App\Repository\FamilleRepository;
+use App\Repository\FinaleRepository;
 use App\Repository\ScrutinRepository;
 use App\Repository\VotantRepository;
+use App\Repository\VoteFinaleRepository;
 use App\Repository\VoteRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -33,11 +38,15 @@ class Utility
     private CandidatRepository $candidatRepository;
     private ElectionRepository $electionRepository;
     private EntityManagerInterface $entityManager;
+    private FainalisteRepository $finalisteRepository;
+    private FinaleRepository $finaleRepository;
+    private VoteFinaleRepository $voteFinaleRepository;
 
     public function __construct(ConcoursRepository $concoursRepository, FamilleRepository $familleRepository, VoteRepository $voteRepository,
                                 UrlGeneratorInterface $urlGenerator, RequestStack $requestStack, VotantRepository $votantRepository,
                                 AnomalieRepository $anomalieRepository, ScrutinRepository $scrutinRepository, CandidatRepository $candidatRepository,
-                                ElectionRepository $electionRepository, EntityManagerInterface $entityManager
+                                ElectionRepository $electionRepository, EntityManagerInterface $entityManager, FainalisteRepository $finalisteRepository,
+                                FinaleRepository $finaleRepository, VoteFinaleRepository $voteFinaleRepository
     )
     {
         $this->concoursRepository = $concoursRepository;
@@ -51,6 +60,9 @@ class Utility
         $this->candidatRepository = $candidatRepository;
         $this->electionRepository = $electionRepository;
         $this->entityManager = $entityManager;
+        $this->finalisteRepository = $finalisteRepository;
+        $this->finaleRepository = $finaleRepository;
+        $this->voteFinaleRepository = $voteFinaleRepository;
     }
 
     /**
@@ -499,4 +511,80 @@ class Utility
 
         return $finale;
     }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function listeFinaliste(): array
+    {
+        $fin = '15:30:00';
+        $finale = $this->finaleRepository->findFinaleEncours(); //dd($finale->getFin());
+        if($finale->getFin()->format('Y-m-d') === date('Y-m-d')){
+            if ($fin <= date('H:i:s')){ //dd('attrapé');
+                return $list=[];
+            }
+        }
+        // Liste des finalistes
+        $finalistes =  $this->finalisteRepository->findListFinale();
+        $lists=[]; $i=0;
+        foreach ($finalistes as $finaliste){
+            $vote = count($finaliste->getVoteFinales());
+            $lists[$i++]=[
+                'id' => $finaliste->getId(),
+                'nom' => $finaliste->getNom(),
+                'media' => $finaliste->getMedia(),
+                'slug' => $finaliste->getSlug(),
+                'commune_id' => $finaliste->getCommune()->getId(),
+                'commune_nom' => $finaliste->getCommune()->getNom(),
+                'commune_slug' => $finaliste->getCommune()->getSlug(),
+                'finale' => $finaliste->getFinale()->getNom(),
+                'vote' => $vote,
+                'vote_total' =>count($finale->getVoteFinales())
+            ];
+        }
+
+        return $lists;
+    }
+
+    public function voteFinale($finaliste, $telephonne)
+    {
+        // Si telephone est concerné par un vote alors return false
+        $vote = $this->voteFinaleRepository->findOneBy(['telephone' => $telephonne]);
+        if ($vote) return false;
+
+        $ip = $this->requestStack->getMainRequest()->getClientIp();
+        $finale = $this->finaleRepository->findOneBy(['id' => $finaliste->getFinale()]); //dd($finale);
+        $voteFinale = new VoteFinale();
+        $voteFinale->setIp($ip);
+        $voteFinale->setTelephone($telephonne);
+        $voteFinale->setFinaliste($finaliste);
+        $voteFinale->setFinale($finale);
+
+        $this->voteFinaleRepository->save($voteFinale, true);
+
+        return true;
+        // Si vote adresse Ip vote est supérieur à 1à alors return false
+        // Sinon enregistrer vote et return true
+    }
+
+    /**
+     * $list[$i++]=[
+    'id' => $famille->getId(),
+    'nom' => $famille->getNom(),
+    'code' => $famille->getCode(),
+    'media' => $famille->getMedia(),
+    'slug' => $famille->getSlug(),
+    'commune_id' => $famille->getCommune()->getId(),
+    'commune_nom' => $famille->getCommune()->getNom(),
+    'commune_slug' => $famille->getCommune()->getSlug(),
+    'concours_id' => $famille->getConcours()->getId(),
+    'concours_nom' => $famille->getConcours()->getNom(),
+    'concours_code' => $famille->getConcours()->getCode(),
+    'concours_debut' => $famille->getConcours()->getDebut(),
+    'concours_fin' => $famille->getConcours()->getFin(),
+    'concours_slug' => $famille->getConcours()->getSlug(),
+    'vote' => count($famille->getVotes()),
+    'vote_total' => count($famille->getConcours()->getVotes())
+    ];
+     */
 }

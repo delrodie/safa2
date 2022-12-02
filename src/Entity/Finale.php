@@ -34,9 +34,13 @@ class Finale
     #[ORM\OneToMany(mappedBy: 'finale', targetEntity: Fainaliste::class)]
     private Collection $fainalistes;
 
+    #[ORM\OneToMany(mappedBy: 'finale', targetEntity: VoteFinale::class)]
+    private Collection $voteFinales;
+
     public function __construct()
     {
         $this->fainalistes = new ArrayCollection();
+        $this->voteFinales = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,5 +141,35 @@ class Finale
     public function __toString()
     {
         return $this->nom;
+    }
+
+    /**
+     * @return Collection<int, VoteFinale>
+     */
+    public function getVoteFinales(): Collection
+    {
+        return $this->voteFinales;
+    }
+
+    public function addVoteFinale(VoteFinale $voteFinale): self
+    {
+        if (!$this->voteFinales->contains($voteFinale)) {
+            $this->voteFinales->add($voteFinale);
+            $voteFinale->setFinale($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoteFinale(VoteFinale $voteFinale): self
+    {
+        if ($this->voteFinales->removeElement($voteFinale)) {
+            // set the owning side to null (unless already changed)
+            if ($voteFinale->getFinale() === $this) {
+                $voteFinale->setFinale(null);
+            }
+        }
+
+        return $this;
     }
 }

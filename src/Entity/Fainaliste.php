@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FainalisteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FainalisteRepository::class)]
@@ -27,6 +29,14 @@ class Fainaliste
 
     #[ORM\ManyToOne(inversedBy: 'fainalistes')]
     private ?Finale $finale = null;
+
+    #[ORM\OneToMany(mappedBy: 'finaliste', targetEntity: VoteFinale::class)]
+    private Collection $voteFinales;
+
+    public function __construct()
+    {
+        $this->voteFinales = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +99,36 @@ class Fainaliste
     public function setFinale(?Finale $finale): self
     {
         $this->finale = $finale;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VoteFinale>
+     */
+    public function getVoteFinales(): Collection
+    {
+        return $this->voteFinales;
+    }
+
+    public function addVoteFinale(VoteFinale $voteFinale): self
+    {
+        if (!$this->voteFinales->contains($voteFinale)) {
+            $this->voteFinales->add($voteFinale);
+            $voteFinale->setFinaliste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoteFinale(VoteFinale $voteFinale): self
+    {
+        if ($this->voteFinales->removeElement($voteFinale)) {
+            // set the owning side to null (unless already changed)
+            if ($voteFinale->getFinaliste() === $this) {
+                $voteFinale->setFinaliste(null);
+            }
+        }
 
         return $this;
     }

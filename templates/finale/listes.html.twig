@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block nom %}Finale SAFA-Tour 2022{% endblock %}
+
+{% block body %}
+    <main id="finaliste" class="mt-5">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for finaliste in finalistes %}
+                <div class="col" data-aos="zoom-in" data-aos-duration="2000" data-aos-easing="ease-in-sine">
+                    <div class="card h-100">
+                        <a href="{{ path('app_finale_vote', {'slug': finaliste.slug}) }}">
+                            <figure>
+                                {% if finaliste.media %}
+                                    <img src="{{ absolute_url(asset('upload/finaliste/' ~ finaliste.media)) }}" class="card-img-top" alt="{{ finaliste.nom }}">
+                                {% else %}
+                                    <img src="{{ absolute_url(asset('assets/img/image.jpg')) }}" alt="card-img-top">
+                                {% endif %}
+                            </figure>
+
+                            <div class="card-body finaliste">
+                                <small class="text-muted" style="float: right"><i class="fa-solid fa-location-dot"></i> {{ finaliste.commune_nom }}</small>
+                                <h5 class="card-title"><i class="fa-solid fa-users"></i> {{ finaliste.nom }}</h5>
+                                <p></p>
+                            </div>
+                        </a>
+
+                        <div class="card-footer">
+                            <small class="">
+                                <span class="vote"><i class="fa-solid fa-box-archive"></i> <span>{{ finaliste.vote }}</span>/{{ finaliste.vote_total }}</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <!-- A supprimer -->
+        <!--<div class="row mt-5 mb-3">
+            <div class="col text-end">
+                <a href="{{ path('app_dashboard') }}">Connexion</a>
+            </div>
+        </div>-->
+    </main>
+{% endblock %}
+{% block meta %}
+    <link rel="canonical" href="{{ absolute_url(path('app_home')) }}" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:type" content="Item" />
+    <meta property="og:title" content="Finale - Salon International de la finaliste" />
+    <meta property="og:description" content="Finale du Salon International de la finaliste " />
+    <meta property="og:url" content="{{ absolute_url(path('app_finale_index')) }}" />
+    <meta property="og:site_name" content="SAFA" />
+    <meta property="article:section" content="Item" />
+    <meta property="article:published_time" content="2022-11-19T15:25:59+00:00" />
+    <meta property="og:image" content="{{ absolute_url(asset('assets/img/bg.png')) }}" />
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:description" content="Finale du salon International de la finaliste"/>
+    <meta name="twitter:title" content="Finale - Salon International de la finaliste"/>
+    <meta name="twitter:domain" content="SAFA"/>
+    <meta name="twitter:image:src" content="{{ absolute_url(asset('assets/img/bg.png')) }}"/>
+{% endblock %}

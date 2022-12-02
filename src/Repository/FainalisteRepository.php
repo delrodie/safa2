@@ -39,6 +39,19 @@ class FainalisteRepository extends ServiceEntityRepository
         }
     }
 
+    public function findListFinale()
+    {
+        return $this->createQueryBuilder('f')
+            ->addSelect('c')
+            ->addSelect('fi')
+            ->leftJoin('f.commune', 'c')
+            ->leftJoin('f.finale', 'fi')
+            ->where(':date BETWEEN fi.debut AND fi.fin')
+            ->setParameter('date', date('Y-m-d 00:00:00'))
+            ->getQuery()->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Fainaliste[] Returns an array of Fainaliste objects
 //     */
