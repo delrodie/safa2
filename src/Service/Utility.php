@@ -517,7 +517,7 @@ class Utility
      */
     public function listeFinaliste(): array
     {
-        $fin = '15:30:00';
+        $fin = '13:00:00';
         $finale = $this->finaleRepository->findFinaleEncours(); //dd($finale->getFin());
         if($finale->getFin()->format('Y-m-d') === date('Y-m-d')){
             if ($fin <= date('H:i:s')){ //dd('attrapé');
