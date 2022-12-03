@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/finale-2022')]
+#[Route('/finale-2022222')]
 class FinaleController extends AbstractController
 {
     private Utility $utility;
