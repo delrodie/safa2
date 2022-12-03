@@ -27,4 +27,13 @@ class DashboardController extends AbstractController
             'rangs' => $rangs
         ]);
     }
+
+    #[Route('/finale', name: 'app_dashboard_finale')]
+    public function finale()
+    {
+        //dd($this->utility->classementFinale());
+        return $this->render('backend/dashboard_finale.html.twig',[
+            'rangs' => $this->utility->classementFinale(),
+        ]);
+    }
 }

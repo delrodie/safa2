@@ -563,28 +563,50 @@ class Utility
         $this->voteFinaleRepository->save($voteFinale, true);
 
         return true;
-        // Si vote adresse Ip vote est supérieur à 1à alors return false
-        // Sinon enregistrer vote et return true
+    }
+
+    public function classementFinale()
+    {
+        $finalistes = $this->finalisteRepository->findAll();
+        $lists=[]; $i=0; $totalVote=1;
+        foreach ($finalistes as $finaliste){
+            $lists[$finaliste->getId()] = count($finaliste->getVoteFinales());
+            $totalVote = count($finaliste->getFinale()->getVoteFinales());
+        }
+
+        arsort($lists);
+        $rangs=[];$j=0;
+        if (!$totalVote) $totalVote=1;
+        foreach ($lists as $key => $value){
+            $famille = $this->finalisteRepository->findOneBy(['id' => (int)$key]);
+            $vote = count($famille->getVoteFinales());
+            $rang[$j++] = [
+                'id' => $famille->getId(),
+                'nom' => $famille->getNom(),
+                'media' => $famille->getMedia(),
+                'vote' => $vote,
+                'pourcentage' => round($vote * 100 / $totalVote, 2),
+                'commune' => $famille->getCommune()->getNom()
+            ];
+        }
+
+        return $rang;
     }
 
     /**
-     * $list[$i++]=[
-    'id' => $famille->getId(),
-    'nom' => $famille->getNom(),
-    'code' => $famille->getCode(),
-    'media' => $famille->getMedia(),
-    'slug' => $famille->getSlug(),
-    'commune_id' => $famille->getCommune()->getId(),
-    'commune_nom' => $famille->getCommune()->getNom(),
-    'commune_slug' => $famille->getCommune()->getSlug(),
-    'concours_id' => $famille->getConcours()->getId(),
-    'concours_nom' => $famille->getConcours()->getNom(),
-    'concours_code' => $famille->getConcours()->getCode(),
-    'concours_debut' => $famille->getConcours()->getDebut(),
-    'concours_fin' => $famille->getConcours()->getFin(),
-    'concours_slug' => $famille->getConcours()->getSlug(),
-    'vote' => count($famille->getVotes()),
-    'vote_total' => count($famille->getConcours()->getVotes())
+     * $familles = $this->familleRepository->findByConcoursActif();
+
+    $rang[$j++]=[
+    'id' => $couple->getId(),
+    'nom' => $couple->getNom(),
+    'media' => $couple->getMedia(),
+    'vote' => $vote,
+    'pourcentage' => round($vote * 100 / $totalVote, 2),
+    'commune' => $couple->getCommune()->getNom()
     ];
+
+    }
+
+    return $rang;
      */
 }
